@@ -45,3 +45,16 @@ func (apiCfg *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request, 
 
 	respondWithJSON(w,200,databaseUserToUser(user));
 }
+
+func (apiCfg *apiConfig) handlerGetPostsForUser(w http.ResponseWriter,r *http.Request,user database.User){
+	posts, err := apiCfg.DB.GetPostsForUsers(r.Context(), database.GetPostsForUsersParams{
+		UserID : user.ID,
+		Limit: 10,
+	})
+	if err!=nil{
+		respondWithError(w,403,fmt.Sprintf("Cannot get posts: %v", err))
+		return
+	}
+
+	respondWithJSON(w,200,databasePostsToPostsList(posts))
+}
