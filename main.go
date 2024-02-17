@@ -52,7 +52,7 @@ func main(){
 		AllowedMethods:  []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{"*"},
 		ExposedHeaders: []string{"Link"},
-		AllowCredentials: false,
+		AllowCredentials: false, 
 		MaxAge: 300,
 	}))
 
@@ -61,6 +61,9 @@ func main(){
 	v1Router.Get("/ready", http.HandlerFunc(handlerReadiness))
 	v1Router.Get("/error", http.HandlerFunc(handleError))
 	v1Router.Post("/users", apiCfg.handlerCreateUser)
+	v1Router.Get("/users", apiCfg.middleWareAuth(apiCfg.handlerGetUser))
+	v1Router.Post("/feeds", apiCfg.middleWareAuth(apiCfg.handlerCreateFeed))
+	v1Router.Get("/feeds",apiCfg.handlerGetFeeds)
 
 	router.Mount("/v1", v1Router)
 
